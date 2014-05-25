@@ -8,3 +8,7 @@
     - lightdm
     - openbox
     - linuxvnc
+
+- name: Set openbox as default session
+  sudo: yes
+  copy: src=conf/lightdm/10-openbox.conf dest=/usr/share/lightdm/lightdm.conf.d/10-openbox.conf owner=root group=root mode=0644

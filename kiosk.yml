@@ -2,6 +2,9 @@
 - hosts: all
   user: vagrant
 
+  vars_files:
+    - conf/vars.yml
+
   tasks:
     - include: tasks/create-swap-file.yml
     - include: tasks/common.yml
@@ -12,9 +15,6 @@
       sudo: yes
       file: dest=/etc/guest-session mode=755 owner=root group=root state=directory
 
-    - name: Setup autologin
-      sudo: yes
-      copy: src=conf/lightdm/50-auto-guest.conf dest=/usr/share/lightdm/lightdm.conf.d/50-auto-guest.conf owner=root group=root mode=0644
 
     - name: Copy guest-session script
       sudo: yes
@@ -22,7 +22,15 @@
 
     - name: Copy guest user files
       sudo: yes
-      copy: src=conf/skel dest=/etc/guest-session/ owner=root group=root mode=0755
+      copy: src=conf/skel dest=/etc/guest-session
+
+    - name: Compile autostart script
+      sudo: yes
+      template: src=conf/autostart.j2 dest=/etc/guest-session/skel/.config/openbox/autostart owner=root group=root mode=0755
+
+    - name: Setup autologin
+      sudo: yes
+      copy: src=conf/lightdm/50-auto-guest.conf dest=/usr/share/lightdm/lightdm.conf.d/50-auto-guest.conf owner=root group=root mode=0644
 
     - name: Start lightdm
       sudo: yes
