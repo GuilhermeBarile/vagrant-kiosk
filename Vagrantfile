@@ -50,10 +50,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.gui = true
   #
   #   # Use VBoxManage to customize the VM. For example to change memory:
-    vb.customize ["modifyvm", :id, "--memory", "128"]
+    vb.customize ["modifyvm", :id, "--memory", "256"]
   end
   #
   # View the documentation for the provider you're using for more
   # information on available options.
-
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "kiosk.yml"
+  end
 end

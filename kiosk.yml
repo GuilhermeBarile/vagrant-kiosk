@@ -1,0 +1,29 @@
+---
+- hosts: all
+  user: vagrant
+
+  tasks:
+    - include: tasks/create-swap-file.yml
+    - include: tasks/common.yml
+    - include: tasks/x11.yml
+    - include: tasks/chromium-browser.yml
+
+    - name: Create guest-session config dir
+      sudo: yes
+      file: dest=/etc/guest-session mode=755 owner=root group=root state=directory
+
+    - name: Setup autologin
+      sudo: yes
+      copy: src=conf/lightdm/50-auto-guest.conf dest=/usr/share/lightdm/lightdm.conf.d/50-auto-guest.conf owner=root group=root mode=0644
+
+    - name: Copy guest-session script
+      sudo: yes
+      copy: src=conf/guest-session-auto.sh dest=/etc/guest-session/auto.sh owner=root group=root mode=0755
+
+    - name: Copy guest user files
+      sudo: yes
+      copy: src=conf/skel dest=/etc/guest-session/ owner=root group=root mode=0755
+
+    - name: Start lightdm
+      sudo: yes
+      service: name=lightdm state=running enabled=yes

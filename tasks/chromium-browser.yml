@@ -1,0 +1,6 @@
+---
+- name: Install and configure Chromium
+  sudo: yes
+  apt: name={{ item }} state=present
+  with_items:
+    - chromium-browser

@@ -1,0 +1,10 @@
+---
+
+- name: Install minimal X11 Environment with Openbox
+  sudo: yes
+  apt: name={{ item }} state=present
+  with_items:
+    - xorg
+    - lightdm
+    - openbox
+    - linuxvnc
